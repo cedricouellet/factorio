@@ -2,6 +2,8 @@ import utils from "./utils.js";
 import { localize } from "./dict.js";
 import { getNextLanguage, setLanguage } from "./language.js";
 
+const startConfetti = confetti.create($("#canvas")[0]);
+
 let people = [];
 
 updateText();
@@ -10,7 +12,6 @@ $("#btn-add-person").on("click", addPerson);
 $("#btn-calculate").on("click", calculate);
 $("#btn-reset").on("click", reset);
 $("#btn-language").on("click", toggleLanguage);
-$(document.body).on("change", ".check-paid", checkPaidChanged);
 $(document.body).on("change", ".split-percentage", percentageChanged);
 $(document.body).on("change", ".personal-expenses", personalExpensesChanged);
 
@@ -35,24 +36,23 @@ function updateText() {
   $("#col-name").text(localize("label.name"));
   $("#col-percentage").text(localize("label.split_percentage"));
   $("#col-personal-expenses").text(localize("label.personal_expenses"));
-  $("#col-paid").text(localize("label.paid"));
   $("#col-result").text(localize("label.result"));
 }
 
 function calculate() {
   const totalCost = utils.toFloat($("#total-cost").val());
 
-  if (totalCost === undefined) {
+  if (totalCost === undefined || isNaN(totalCost)) {
     $("#total-cost-error").text(localize("error.totalcost_required"));
+    return;
+  } else if (totalCost <= 0) {
+    $("#total-cost-error").text(localize("error.totalcost_minimum"));
     return;
   } else {
     $("#total-cost-error").text("");
   }
   if (people.length < 2) {
     $("#new-name-error").text(localize("error.people_required"));
-    return;
-  } else if (people.filter((p) => p.paid === true).length != 1) {
-    $("#new-name-error").text(localize("error.peoplepaid_required"));
     return;
   } else if (people.reduce((val, next) => val + next.percentage, 0) > 100) {
     $("#new-name-error").text(localize("error.peoplepercentage_maximum"));
@@ -61,49 +61,40 @@ function calculate() {
     $("#new-name-error").text("");
   }
 
-  const payer = people.filter((p) => p.paid === true)[0];
+  function celebrate() {
+    startConfetti({
+      particleCount: 150,
+      spread: 180,
+      origin: { y: 0.6 },
+    });
+
+    setTimeout(() => myConfetti.reset(), 3000);
+  }
+
+  const totalPersonalExpenses = people.reduce(
+    (val, next) => val + next.personalExpenses,
+    0
+  );
+
+  if (totalPersonalExpenses > totalCost) {
+    $("#total-cost-error").text(localize("error.personalexpenses_maximum"));
+    return;
+  } else {
+    $("#total-cost-error").text("");
+  }
+
+  const sharedCost = totalCost - totalPersonalExpenses;
 
   people = people.map((p) => {
-    if (p.paid === false) {
-      const portion = totalCost * (p.percentage / 100);
-      p.result =
-        portion + p.personalExpenses - payer.personalExpenses / people.length;
-    } else {
-      p.result = 0;
-    }
-
+    p.result = (sharedCost * (p.percentage / 100) + p.personalExpenses).toFixed(
+      2
+    );
     return p;
   });
 
   updatePeople();
-}
 
-function checkPaidChanged(e) {
-  const id = $(e.target).closest(".person").attr("data-id");
-  const checked = e.target.checked;
-
-  people = people.map((p) => {
-    if (p.id == id) {
-      p.paid = checked;
-    }
-    return p;
-  });
-
-  if (checked) {
-    $(".check-paid:checked").each((_, checkbox) => {
-      const otherId = $(checkbox).closest(".person").attr("data-id");
-      if (otherId != id) {
-        people = people.map((p) => {
-          if (p.id == otherId) {
-            p.paid = false;
-          }
-          return p;
-        });
-
-        $(checkbox).prop("checked", false);
-      }
-    });
-  }
+  celebrate();
 }
 
 function addPerson() {
@@ -128,7 +119,6 @@ function addPerson() {
     name: name,
     percentage: 50,
     personalExpenses: 0,
-    paid: false,
     result: 0,
   };
   people = [...people, person];
@@ -157,6 +147,10 @@ function percentageChanged(e) {
   const id = $(e.target).closest(".person").attr("data-id");
   const value = utils.toFloat($(e.target).val());
 
+  if (isNaN(value)) {
+    $(e.target).val(0);
+  }
+
   people = people.map((p) => {
     if (p.id == id) {
       p.percentage = value;
@@ -177,6 +171,10 @@ function reset() {
 function personalExpensesChanged(e) {
   const id = $(e.target).closest(".person").attr("data-id");
   const value = utils.toFloat($(e.target).val());
+
+  if (isNaN(value)) {
+    $(e.target).val(0);
+  }
 
   people = people.map((p) => {
     if (p.id == id) {
@@ -212,13 +210,10 @@ function updatePeople() {
               <span class="dollar-sign">$</span>
             </div>
           </td>
-          <td class="text-center">
-            <input type="checkbox" name="check-paid" class="check-paid" ${
-              person.paid ? "checked" : ""
-            } />
-          </td>
           <td>
-            <span class="result">${(person.result == 0 ? "-" : person.result)}</span>
+            <span class="result">${
+              person.result == 0 ? "-" : person.result
+            }</span>
             <span class="dollar-sign">$</span>
         </tr>
   `);

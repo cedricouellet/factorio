@@ -1,66 +1,95 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
 
 body {
-    background: lightgray;
-    font-family: monospace;
+  background: rgb(255, 255, 255);
+  background: -moz-linear-gradient(
+    343deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(56, 107, 79, 1) 0%,
+    rgba(140, 218, 131, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    343deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(56, 107, 79, 1) 0%,
+    rgba(140, 218, 131, 1) 100%
+  );
+  background: linear-gradient(
+    343deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(56, 107, 79, 1) 0%,
+    rgba(140, 218, 131, 1) 100%
+  );
+  background-repeat: no-repeat;
+  font-family: monospace;
+  font-size: 1em;
+}
+
+button {
+  font-size: 1em !important;
 }
 
 header {
-    background: whitesmoke;
-    padding: 20px;
-    text-align: center;
+  background: whitesmoke;
+  padding: 20px;
+  text-align: center;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+#canvas {
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1000;
 }
 
 #container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .dollar-sign {
-    font-size: 1.25em;
-    color: green;
-}
-
-input[type="checkbox"] {
-    transform: scale(1.5);
+  color: green;
 }
 
 .result {
-    font-size: 1.25em;
-    color: purple;
+  color: purple;
 }
 
 .percentage-sign {
-    font-size: 1.5em;
-    color: purple;
+  color: purple;
 }
 
 .hidden {
-    display: none;
-}
-
-.people-container {
-    max-width: 60vw !important;
-    width: 60vw !important;
-}
-
-.form-container {
-    max-width: 350px !important;
-    width: 350px !important;
-}
-
-.form-container > input {
-    width: inherit;
-    max-width: inherit;
+  display: none;
 }
 
 .error {
-    color: indianred;
-    font-style: italic;
-    margin: auto;
-    text-overflow: ellipsis;
+  color: #e72a34;
+  font-style: italic;
+  margin: auto;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 992px) {
+  table {
+    max-width: 60vw;
+    width: 60vw;
+  }
+  body,
+  .percentage-sign,
+  .dollar-sign {
+    font-size: 1.25em;
+  }
 }

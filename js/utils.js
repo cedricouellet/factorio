@@ -9,7 +9,7 @@ function isNullOrWhiteSpace(str) {
 
 /**
  * Determines whether or not an array contains any elements
- * @param {Array} array The array to check 
+ * @param {Array} array The array to check
  * @returns {Boolean} The resulting boolean
  */
 function any(array) {
@@ -18,7 +18,7 @@ function any(array) {
 
 /**
  * Determines whether or not an array contains any values matching a predicate
- * @param {Array} array The array to check  
+ * @param {Array} array The array to check
  * @param {*} predicate The predicate to determine the filter basis
  * @returns {Boolean} The resulting boolean
  */
