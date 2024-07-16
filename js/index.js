@@ -68,6 +68,8 @@ function calculate() {
       const portion = totalCost * (p.percentage / 100);
       p.result =
         portion + p.personalExpenses - payer.personalExpenses / people.length;
+    } else {
+      p.result = 0;
     }
 
     return p;
@@ -216,7 +218,7 @@ function updatePeople() {
             } />
           </td>
           <td>
-            <span class="result">${person.result}</span>
+            <span class="result">${(person.result == 0 ? "-" : person.result)}</span>
             <span class="dollar-sign">$</span>
         </tr>
   `);
