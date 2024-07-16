@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background: lightgray;
+    font-family: monospace;
+}
+
+header {
+    background: whitesmoke;
+    padding: 20px;
+    text-align: center;
+}
+
+#container {
+    padding: 20px;
+}
+
+.dollar-sign {
+    font-size: 1.25em;
+    color: green;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+}
+
+.result {
+    font-size: 1.25em;
+    color: purple;
+}
+
+.percentage-sign {
+    font-size: 1.5em;
+    color: purple;
+}
+
+.hidden {
+    display: none;
+}
+
+.people-container {
+    max-width: 60vw !important;
+    width: 60vw !important;
+}
+
+.form-container {
+    max-width: 350px !important;
+    width: 350px !important;
+}
+
+.form-container > input {
+    width: inherit;
+    max-width: inherit;
+}
+
+.error {
+    color: indianred;
+    font-style: italic;
+    margin: auto;
+    text-overflow: ellipsis;
+}
